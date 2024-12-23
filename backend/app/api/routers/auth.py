@@ -1,35 +1,18 @@
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from api.deps import bcrypt_context
-from models import UserBase, Token, UserCreate
+from models import  Token, UserCreate
+from utils import create_access_token, authenticate_user
 from schemas import serialize_user
 from fastapi.security import OAuth2PasswordRequestForm
-from config.config import SECRET_KEY, ALGORITHM
 from config.db import User
 from bson import ObjectId
-from jose import jwt
 
 router = APIRouter(
     prefix='/auth',
     tags=['auth']
 )
-
-
-def authenticate_user(email: str, password: str):
-    user = User.find_one({'email': email})
-    if not user:
-        return False
-    if not bcrypt_context.verify(password, user["password"]):
-        return False
-    return user
-
-
-def create_access_token(username: str, user_id: str, expires_delta: timedelta):
-    encode = {'sub': username, 'id': user_id}
-    expires = datetime.now(timezone.utc) + expires_delta
-    encode.update({'exp': expires})
-    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
 @router.post('/signup', status_code=status.HTTP_201_CREATED)
@@ -54,13 +37,14 @@ async def create_user(user_credentials: UserCreate):
         "email": email,
         "password": password
     }
+    # user = serialize_user(existing_user)
     User.insert_one(user)
     
     return {"message": "User created successfully", "user": serialize_user(user)}
 
 @router.post('/login', response_model=Token)
-async def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    user = authenticate_user(form_data.username, form_data.password)
+async def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], email: str):
+    user = authenticate_user(email, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -69,5 +53,6 @@ async def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()])
         )
     
     token = create_access_token(user["email"], str(user["_id"]), timedelta(minutes=20))
+
     
     return {"access_token": token, "token_type": "Bearer"}

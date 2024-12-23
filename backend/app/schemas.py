@@ -1,5 +1,6 @@
 def serialize_user(user):
     return {
-        "username": str(user.get("_id", "")), 
+        "id": str(user.get("_id", "")),
+        "username": user.get("username"), 
         "email": user.get("email", ""),
     }

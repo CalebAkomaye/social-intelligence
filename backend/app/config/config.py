@@ -8,3 +8,5 @@ PORT=int(os.getenv("PORT"))
 
 SECRET_KEY=os.getenv("SECRET_KEY")
 ALGORITHM=os.getenv("ALGORITHM")
+
+URI=os.getenv('MONGODB_URI')
