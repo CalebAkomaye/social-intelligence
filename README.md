@@ -1,6 +1,6 @@
 ## Overview
 
-Insight i a platform meant to transform online conversations into actionable insights and high-quality leads. Built to leverage the power of AI and real-time data processing, it empowers businesses to identify key opportunities and close deals faster. This project is a learning-focused initiative with the goal of experimenting and showcasing the practical implementation of FastAPI, Python, and MongoDB, along with advanced AI techniques.
+Insight is a platform meant to transform online conversations into actionable insights and high-quality leads. Built to leverage the power of AI and real-time data processing, it empowers businesses to identify key opportunities and close deals faster. This project is a learning-focused initiative with the goal of experimenting and showcasing the practical implementation of FastAPI, Python, and MongoDB, along with advanced AI techniques.
 
 ## Features
 
@@ -32,14 +32,14 @@ Below is a sample architecture diagram for the project:
 ```
                ┌───────────────────┐
                │   React / Vite    │
-               │  or Next.js (SSR) │
+               │                   │
                └─────────┬─────────┘
                          │
                          ▼
                 ┌─────────────────┐
                 │   FastAPI App   │
                 │  (Uvicorn)      │
-                └─────────┬───────┘
+                └────────┬───────┘
                          │
                          ▼
                ┌───────────────────┐
